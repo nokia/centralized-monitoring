@@ -1,0 +1,16 @@
+include ../INFO
+
+IMAGE_NAME = cmonitoring-grafana
+
+TIMEOUT = 0
+
+RUN_OPTS = --rm -i -d
+CONTAINER=${IMAGE_NAME}-${INSTANCE}
+PORTS= --net=host
+DOCKER_OPTS = ${RUN_OPTS} ${PORTS} ${VOLUMES} ${ENV}
+#DOCKER_BUILD_OPTS = --no-cache
+
+TAG = 0.1.1
+
+DOCKER_BUILD_OPTS = --build-arg TAG=${TAG}
+FINAL_IMAGE_NAME = $(IMAGE_NAME):$(TAG)

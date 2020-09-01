@@ -1,0 +1,14 @@
+{
+  "proxy": {
+    "ip": "",
+    "port": 0
+  },
+  "jenkins": {
+    "login": "",
+    "token": ""
+  },
+  "jira": {
+    "login": "",
+    "token": ""
+  }
+}

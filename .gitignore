@@ -1,0 +1,13 @@
+.idea
+image/dependency-reduced-pom.xml
+image/target
+.~lock.output.csv#
+README
+resources/keystore.jks
+*.iml
+*.jar
+*.bkp*
+chart/cmonitoring/charts
+doc
+*.tgz
+*.DS_Store
