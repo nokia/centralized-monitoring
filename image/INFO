@@ -55,3 +55,11 @@ TAG = 0.1.1
 
 DOCKER_BUILD_OPTS = --build-arg TAG=${TAG}
 FINAL_IMAGE_NAME = $(IMAGE_NAME):$(TAG)
+
+PROM_IMAGE_NAME = prom/prometheus
+PROM_CONTAINER_NAME = cmonitoring-prometheus
+PROM_DOCKER_OPTS = ${DOCKER_OPTS} -v prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+GRAFANA_IMAGE_NAME = grafana/grafana
+GRAFANA_CONTAINER_NAME = cmonitoring-grafana
+GRAFANA_DOCKER_OPTS = ${DOCKER_OPTS} -v grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml

@@ -7,6 +7,8 @@ build:
 
 run:
 	docker run --name $(CONTAINER) $(DOCKER_OPTS) $(FINAL_IMAGE_NAME)
+	docker run --name $(PROM_CONTAINER_NAME) $(PROM_DOCKER_OPTS) $(PROM_IMAGE_NAME)
+	docker run --name $(GRAFANA_CONTAINER_NAME) $(GRAFANA_DOCKER_OPTS) $(GRAFANA_IMAGE_NAME)
 	sleep $(TIMEOUT)
 
 push:
