@@ -48,7 +48,7 @@ TIMEOUT = 0
 RUN_OPTS = --rm -i -d
 CONTAINER=${IMAGE_NAME}-${INSTANCE}
 PORTS= -p 8080:8080
-DOCKER_OPTS = ${RUN_OPTS} ${VOLUMES} ${ENV}
+DOCKER_OPTS = ${RUN_OPTS} ${ENV}
 CMONITORING_DOCKER_OPTS = ${DOCKER_OPTS} ${PORTS}
 #DOCKER_BUILD_OPTS = --no-cache
 
@@ -57,10 +57,10 @@ TAG = 0.1.1
 DOCKER_BUILD_OPTS = --build-arg TAG=${TAG}
 FINAL_IMAGE_NAME = $(IMAGE_NAME):$(TAG)
 
-PROM_PORTS = -p 9090:9090
+PROM_PORTS = --net=host
 PROM_SRC = $(PWD)/prometheus/prometheus.yml
 PROM_DST = /etc/prometheus/prometheus.yml
-GRAFANA_PORTS = -p 3000:3000
+GRAFANA_PORTS = --net=host
 GRAFANA_SRC = $(PWD)/grafana/datasources.yaml
 GRAFANA_DST = /etc/grafana/provisioning/datasources/datasources.yaml
 
