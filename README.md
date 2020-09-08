@@ -36,26 +36,14 @@ First, clone this repository.
 Then fill the connection settings with your proxy, and your Jira / Jenkins credentials. \
 File location: image/resources/config/connectionSettings.json
 
-Finally, you will have to start the 3 containers separately. \
-<br/>
-Start Prometheus:
-```
-cd prometheus
-make build
-make run
-```
-
-Start Grafana:
-```
-cd grafana
-make build
-make run
-```
-
-Start the multi-connector daemon:
+Build the multi-connector daemon:
 ```
 cd image
 make build
+```
+
+Start prometheus, grafana and the multi-connector daemon newly built:
+```
 make run
 ```
 
