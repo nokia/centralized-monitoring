@@ -12,7 +12,7 @@ run:
 	sleep $(TIMEOUT)
 
 delete:
-    docker rm -f $(CONTAINER) $(PROM_CONTAINER_NAME) $(GRAFANA_CONTAINER_NAME)
+	docker rm -f $(CONTAINER) $(PROM_CONTAINER_NAME) $(GRAFANA_CONTAINER_NAME)
 
 #push:
 #	docker push $(FINAL_IMAGE_NAME)
