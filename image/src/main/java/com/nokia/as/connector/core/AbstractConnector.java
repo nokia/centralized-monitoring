@@ -148,6 +148,9 @@ public abstract class AbstractConnector {
             case GITLAB:
                 return new GitlabConnector(httpClient,
                         id, serverAddress, ssl, timeoutMs, nbSteps, config, monitoringManager);
+            case GITHUB:
+                return new GitlabConnector(httpClient,
+                        id, serverAddress, ssl, timeoutMs, nbSteps, config, monitoringManager);
             case JENKINS:
                 return new JenkinsConnector(httpClient,
                         id, serverAddress, ssl, timeoutMs, nbSteps, config, monitoringManager);

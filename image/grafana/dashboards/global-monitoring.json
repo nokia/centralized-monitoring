@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1598545039812,
+  "iteration": 1600111017477,
   "links": [],
   "panels": [
     {
@@ -34,7 +34,7 @@
       "type": "row"
     },
     {
-      "content": "<h2 style=\"text-align:center\">Artifactory</h2>",
+      "content": "<h2 style=\"text-align:center\">GitHub</h2>",
       "datasource": null,
       "fieldConfig": {
         "defaults": {
@@ -253,10 +253,10 @@
         "lineColor": "rgb(31, 120, 193)",
         "show": false
       },
-      "tableColumn": "",
+      "tableColumn": "github{component_type=\"gitlab\", instance=\"localhost:8080\", job=\"cmonitoring\", mutable=\"false\"}",
       "targets": [
         {
-          "expr": "",
+          "expr": "github",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -364,10 +364,10 @@
         "lineColor": "rgb(31, 120, 193)",
         "show": false
       },
-      "tableColumn": "",
+      "tableColumn": "jenkins_mono_project{component_type=\"jenkins\", instance=\"localhost:8080\", job=\"cmonitoring\", mutable=\"false\"}",
       "targets": [
         {
-          "expr": "",
+          "expr": "jenkins_mono_project",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -586,10 +586,10 @@
         "lineColor": "rgb(31, 120, 193)",
         "show": false
       },
-      "tableColumn": "",
+      "tableColumn": "gitlab{component_type=\"gitlab\", instance=\"localhost:8080\", job=\"cmonitoring\", mutable=\"false\"}",
       "targets": [
         {
-          "expr": "",
+          "expr": "gitlab",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -808,10 +808,10 @@
         "lineColor": "rgb(31, 120, 193)",
         "show": false
       },
-      "tableColumn": "",
+      "tableColumn": "jira{component_type=\"jira\", instance=\"localhost:8080\", job=\"cmonitoring\", mutable=\"false\"}",
       "targets": [
         {
-          "expr": "",
+          "expr": "jira",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -1727,7 +1727,7 @@
         "lineColor": "rgb(31, 120, 193)",
         "show": false
       },
-      "tableColumn": "",
+      "tableColumn": "jira_nb_issues_jira_abdera{assignee=\"all\", component_type=\"jira_nb_issues\", filter=\"Abdera\", instance=\"localhost:8080\", job=\"cmonitoring\", mutable=\"false\", source=\"jira\"}",
       "targets": [
         {
           "expr": "{component_type=\"jira_nb_issues\", filter=\"$jira_filter\", assignee=\"$jira_user\"}",
@@ -1906,7 +1906,7 @@
         "lineColor": "rgb(31, 120, 193)",
         "show": false
       },
-      "tableColumn": "",
+      "tableColumn": "jira_nb_today_issues_jira_abdera{assignee=\"all\", component_type=\"jira_nb_today_issues\", filter=\"Abdera\", instance=\"localhost:8080\", job=\"cmonitoring\", mutable=\"false\", source=\"jira\"}",
       "targets": [
         {
           "expr": "{component_type=\"jira_nb_today_issues\", filter=\"$jira_filter\", assignee=\"$jira_user\"}",
@@ -2241,6 +2241,10 @@
             {
               "text": "NEW",
               "value": "59"
+            },
+            {
+              "text": "REOPENED",
+              "value": "60"
             }
           ]
         },
@@ -2459,8 +2463,8 @@
         "allValue": null,
         "current": {
           "selected": true,
-          "text": "",
-          "value": ""
+          "text": "mono-project",
+          "value": "mono-project"
         },
         "datasource": "Prometheus",
         "definition": "label_values({component_type=\"job\"}, directory)",
@@ -2485,8 +2489,8 @@
         "allValue": null,
         "current": {
           "selected": true,
-          "text": "",
-          "value": ""
+          "text": "Abdera",
+          "value": "Abdera"
         },
         "datasource": "Prometheus",
         "definition": "label_values({component_type=\"issue\"}, filter)",
@@ -2510,7 +2514,7 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "all",
           "value": "all"
         },
@@ -2566,5 +2570,5 @@
   "timezone": "",
   "title": "Centralized Monitoring",
   "uid": "W9OG_fEWz",
-  "version": 11
+  "version": 7
 }

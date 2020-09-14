@@ -9,10 +9,10 @@ package com.nokia.as.connector;
 import javax.ws.rs.NotFoundException;
 
 public enum ConnectorType {
-    CSFP("csfp"),
     JENKINS("jenkins"),
     GERRIT("gerrit"),
     GITLAB("gitlab"),
+    GITHUB("github"),
     CONFLUENCE("confluence"),
     JIRA("jira"),
     ARTIFACTORY("artifactory"),

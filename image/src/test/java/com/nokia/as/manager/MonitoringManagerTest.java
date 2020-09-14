@@ -37,7 +37,6 @@ public class MonitoringManagerTest {
                 "src/test/resources/connectionSettings.json"
         );
         monitoringManager.init();
-        assertNotNull(monitoringManager.getConnectorList(ConnectorType.CSFP));
         assertNotNull(monitoringManager.getConnectorList(ConnectorType.JENKINS));
         assertNotNull(monitoringManager.getConnectorList(ConnectorType.GERRIT));
         assertNotNull(monitoringManager.getConnectorList(ConnectorType.GITLAB));
