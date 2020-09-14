@@ -23,6 +23,7 @@ public enum IssueStatus {
     INANALYSIS("inanalysis", 10063, "In Analysis", 2, 57d),
     ONHOLD("onhold", 10060, "On Hold", 2, 58d),
     NEW("new", 10044, "New", 2, 59d),
+    REOPENED("reopened", 4, "Reopened", 2, 60d),
 
     DONE("done", 10046, "Done", 3, 100d),
     APPROVED("approved", 10007, "Approved", 3, 101d),

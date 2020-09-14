@@ -20,6 +20,7 @@ import com.nokia.as.util.URLEncoder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.ws.rs.NotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
@@ -274,7 +275,7 @@ public class JiraConnector extends AbstractConnector {
                 }
             }
 
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | NotFoundException e) {
             e.printStackTrace();
         }
 

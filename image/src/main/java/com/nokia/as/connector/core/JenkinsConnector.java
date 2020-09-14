@@ -21,6 +21,7 @@ import com.nokia.as.util.URLEncoder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.ws.rs.NotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
@@ -39,7 +40,8 @@ public class JenkinsConnector extends AbstractConnector {
             Map.entry("red", "failure"),
             Map.entry("yellow", "unstable"),
             Map.entry("blue_anime", "inprogress"),
-            Map.entry("red_anime", "inprogress")
+            Map.entry("red_anime", "inprogress"),
+            Map.entry("yellow_anime", "inprogress")
     );
 
     public JenkinsConnector(HttpConnector httpClient,
@@ -306,7 +308,7 @@ public class JenkinsConnector extends AbstractConnector {
             }
 
 
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | NotFoundException e) {
             e.printStackTrace();
         }
 
