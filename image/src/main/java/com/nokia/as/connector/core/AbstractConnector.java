@@ -43,13 +43,10 @@ public abstract class AbstractConnector {
     @Expose
     Integer httpStatusCode;
     HttpConnector httpClient;
-    String login;
-    String pwd;
     HttpRequest request;
     HttpResponse<String> response;
     private GaugeMetric gaugeMetric;
     JSONObject config;
-    JSONObject connectionSettings;
     MonitoringManager monitoringManager;
 
     public AbstractConnector(HttpConnector httpClient,
@@ -59,7 +56,6 @@ public abstract class AbstractConnector {
                              Integer timeoutMs,
                              Integer nbSteps,
                              JSONObject config,
-                             JSONObject connectionSettings,
                              MonitoringManager monitoringManager) {
         this.id = id;
         this.serverAddress = serverAddress;
@@ -71,7 +67,6 @@ public abstract class AbstractConnector {
         this.status = ConnectorStatus.DOWN;
         this.httpClient = httpClient;
         this.config = config;
-        this.connectionSettings = connectionSettings;
         this.monitoringManager = monitoringManager;
         try {
             this.uri = new URI(this.protocol + "://" + this.serverAddress);
@@ -147,31 +142,30 @@ public abstract class AbstractConnector {
                                           Integer timeoutMs,
                                           Integer nbSteps,
                                           JSONObject config,
-                                          JSONObject connectionSettings,
                                           MonitoringManager monitoringManager)
             throws ClassNotFoundException {
         switch (type) {
             case GITLAB:
                 return new GitlabConnector(httpClient,
-                        id, serverAddress, ssl, timeoutMs, nbSteps, config, connectionSettings, monitoringManager);
+                        id, serverAddress, ssl, timeoutMs, nbSteps, config, monitoringManager);
             case JENKINS:
                 return new JenkinsConnector(httpClient,
-                        id, serverAddress, ssl, timeoutMs, nbSteps, config, connectionSettings, monitoringManager);
+                        id, serverAddress, ssl, timeoutMs, nbSteps, config, monitoringManager);
             case GERRIT:
                 return new GerritConnector(httpClient,
-                        id, serverAddress, ssl, timeoutMs, nbSteps, config, connectionSettings, monitoringManager);
+                        id, serverAddress, ssl, timeoutMs, nbSteps, config, monitoringManager);
             case CONFLUENCE:
                 return new ConfluenceConnector(httpClient,
-                        id, serverAddress, ssl, timeoutMs, nbSteps, config, connectionSettings, monitoringManager);
+                        id, serverAddress, ssl, timeoutMs, nbSteps, config, monitoringManager);
             case JIRA:
                 return new JiraConnector(httpClient,
-                        id, serverAddress, ssl, timeoutMs, nbSteps, config, connectionSettings, monitoringManager);
+                        id, serverAddress, ssl, timeoutMs, nbSteps, config, monitoringManager);
             case ARTIFACTORY:
                 return new ArtifactoryConnector(httpClient,
-                        id, serverAddress, ssl, timeoutMs, nbSteps, config, connectionSettings, monitoringManager);
+                        id, serverAddress, ssl, timeoutMs, nbSteps, config, monitoringManager);
             case OPENSTACK:
                 return new OpenstackConnector(httpClient,
-                        id, serverAddress, ssl, timeoutMs, nbSteps, config, connectionSettings, monitoringManager);
+                        id, serverAddress, ssl, timeoutMs, nbSteps, config, monitoringManager);
             default:
                 throw new ClassNotFoundException("Collector not found " + type);
         }
@@ -183,10 +177,8 @@ public abstract class AbstractConnector {
                                           String serverAddress,
                                           Boolean ssl,
                                           JSONObject config,
-                                          JSONObject connectionSettings,
                                           MonitoringManager collectorRegistry)
             throws ClassNotFoundException {
-        return AbstractConnector.build(httpClient,
-                type, id, serverAddress, ssl, 0, 0, config, connectionSettings, collectorRegistry);
+        return AbstractConnector.build(httpClient, type, id, serverAddress, ssl, 0, 0, config, collectorRegistry);
     }
 }

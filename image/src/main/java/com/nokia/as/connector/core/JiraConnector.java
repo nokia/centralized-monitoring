@@ -6,6 +6,7 @@
 
 package com.nokia.as.connector.core;
 
+import com.nokia.as.connector.Authentication;
 import com.nokia.as.connector.ConnectorStatus;
 import com.nokia.as.connector.ConnectorType;
 import com.nokia.as.connector.HttpConnector;
@@ -36,6 +37,7 @@ public class JiraConnector extends AbstractConnector {
     private final int MIN_INTERVAL = 30;
 
     private List<JiraFilter> filters;
+    private Authentication authentication;
 
     public JiraConnector(HttpConnector httpClient,
                          String id,
@@ -44,17 +46,19 @@ public class JiraConnector extends AbstractConnector {
                          Integer timeoutMs,
                          Integer nbSteps,
                          JSONObject config,
-                         JSONObject connectionSettings,
                          MonitoringManager monitoringManager) {
-        super(httpClient, id, serverAddress, ssl, timeoutMs, nbSteps, config, connectionSettings, monitoringManager);
+        super(httpClient, id, serverAddress, ssl, timeoutMs, nbSteps, config, monitoringManager);
         this.nbSteps = nbSteps < MIN_INTERVAL ? MIN_INTERVAL : nbSteps;
-        JSONObject jsonJira = connectionSettings.getJSONObject("jira");
-        this.login = jsonJira.getString("login");
-        this.pwd = jsonJira.getString("token");
+        JSONObject jsonAuthentication = config.getJSONObject("authentication");
+        this.authentication = new Authentication(
+                jsonAuthentication.getString("login"),
+                jsonAuthentication.getString("token"));
         this.request = HttpRequest.newBuilder()
                 .GET()
                 .uri(uri)
-                .header("Authorization", HttpConnector.basicAuth(this.login, this.pwd))
+                .header("Authorization", HttpConnector.basicAuth(
+                        this.authentication.getLogin(),
+                        this.authentication.getToken()))
                 .build();
 
         this.filters = config.has("filters") ?
@@ -232,8 +236,8 @@ public class JiraConnector extends AbstractConnector {
                 issuesJsonObj = httpClient.getAsync(
                         new URI(protocol + "://" + serverAddress + filterService),
                         timeoutMs / 1000,
-                        login,
-                        pwd)
+                        this.authentication.getLogin(),
+                        this.authentication.getToken())
                         .body();
 
                 isFilterSuccess = JSONUtil.isValidJSON(issuesJsonObj) &&

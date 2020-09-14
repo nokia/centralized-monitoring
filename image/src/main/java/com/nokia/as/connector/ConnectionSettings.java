@@ -14,12 +14,6 @@ public class ConnectionSettings {
     private String proxyIp;
     private int proxyPort;
 
-    private String jenkinsLogin;
-    private String jenkinsToken;
-
-    private String jiraLogin;
-    private String jiraToken;
-
     public static ConnectionSettings build(String jsonConfig) {
         JSONObject jsonObj = new JSONObject(jsonConfig);
 
@@ -34,38 +28,18 @@ public class ConnectionSettings {
             isProxyEnabled = true;
         }
 
-        JSONObject jsonJenkins = jsonObj.getJSONObject("jenkins");
-        String jenkinsLogin = jsonJenkins.getString("login");
-        String jenkinsToken = jsonJenkins.getString("token");
-
-        JSONObject jsonJira = jsonObj.getJSONObject("jira");
-        String jiraLogin = jsonJira.getString("login");
-        String jiraToken = jsonJira.getString("token");
-
         return new ConnectionSettings(
                 isProxyEnabled,
                 proxyIp,
-                proxyPort,
-                jenkinsLogin,
-                jenkinsToken,
-                jiraLogin,
-                jiraToken);
+                proxyPort);
     }
 
     private ConnectionSettings(boolean isProxyEnabled,
                                String proxyIp,
-                               int proxyPort,
-                               String jenkinsLogin,
-                               String jenkinsToken,
-                               String jiraLogin,
-                               String jiraToken) {
+                               int proxyPort) {
         this.isProxyEnabled = isProxyEnabled;
         this.proxyIp = proxyIp;
         this.proxyPort = proxyPort;
-        this.jenkinsLogin = jenkinsLogin;
-        this.jenkinsToken = jenkinsToken;
-        this.jiraLogin = jiraLogin;
-        this.jiraToken = jiraToken;
     }
 
     public boolean isProxyEnabled() {
@@ -78,21 +52,5 @@ public class ConnectionSettings {
 
     public int getProxyPort() {
         return proxyPort;
-    }
-
-    public String getJenkinsLogin() {
-        return jenkinsLogin;
-    }
-
-    public String getJenkinsToken() {
-        return jenkinsToken;
-    }
-
-    public String getJiraLogin() {
-        return jiraLogin;
-    }
-
-    public String getJiraToken() {
-        return jiraToken;
     }
 }

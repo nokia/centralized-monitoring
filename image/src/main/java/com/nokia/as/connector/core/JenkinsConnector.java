@@ -6,6 +6,7 @@
 
 package com.nokia.as.connector.core;
 
+import com.nokia.as.connector.Authentication;
 import com.nokia.as.connector.ConnectorStatus;
 import com.nokia.as.connector.ConnectorType;
 import com.nokia.as.connector.HttpConnector;
@@ -34,6 +35,7 @@ public class JenkinsConnector extends AbstractConnector {
     private final int MIN_INTERVAL = 60;
 
     private List<JenkinsDirectory> directories;
+    private Authentication authentication;
 
     private Map<String, String> colorMap = Map.ofEntries(
             Map.entry("blue", "success"),
@@ -51,17 +53,19 @@ public class JenkinsConnector extends AbstractConnector {
                             Integer timeoutMs,
                             Integer nbSteps,
                             JSONObject config,
-                            JSONObject connectionSettings,
                             MonitoringManager monitoringManager) {
-        super(httpClient, id, serverAddress, ssl, timeoutMs, nbSteps, config, connectionSettings, monitoringManager);
+        super(httpClient, id, serverAddress, ssl, timeoutMs, nbSteps, config, monitoringManager);
         this.nbSteps = nbSteps < MIN_INTERVAL ? MIN_INTERVAL : nbSteps;
-        JSONObject jsonJenkins = connectionSettings.getJSONObject("jenkins");
-        this.login = jsonJenkins.getString("login");
-        this.pwd = jsonJenkins.getString("token");
+        JSONObject jsonAuthentication = config.getJSONObject("authentication");
+        this.authentication = new Authentication(
+                jsonAuthentication.getString("login"),
+                jsonAuthentication.getString("token"));
         this.request = HttpRequest.newBuilder()
                 .GET()
                 .uri(uri)
-                .header("Authorization", HttpConnector.basicAuth(this.login, this.pwd))
+                .header("Authorization", HttpConnector.basicAuth(
+                        this.authentication.getLogin(),
+                        this.authentication.getToken()))
                 .build();
 
         this.directories = config.has("directories") ?
@@ -166,8 +170,8 @@ public class JenkinsConnector extends AbstractConnector {
                 jobsResponse = httpClient.getAsync(
                         new URI(protocol + "://" + serverAddress + jobListSerice),
                         timeoutMs / 1000,
-                        login,
-                        pwd);
+                        this.authentication.getLogin(),
+                        this.authentication.getToken());
                 nbTries++;
             }
 
@@ -213,8 +217,8 @@ public class JenkinsConnector extends AbstractConnector {
                     lastBuildResponse = httpClient.getAsync(
                             new URI(protocol + "://" + serverAddress + lastBuildService),
                             timeoutMs / 1000,
-                            login,
-                            pwd);
+                            this.authentication.getLogin(),
+                            this.authentication.getToken());
                     nbTries++;
                 }
 
@@ -255,8 +259,8 @@ public class JenkinsConnector extends AbstractConnector {
                     buildsResponse = httpClient.getAsync(
                             new URI(protocol + "://" + serverAddress + "/" + jobBuildsService),
                             timeoutMs / 1000,
-                            login,
-                            pwd);
+                            this.authentication.getLogin(),
+                            this.authentication.getToken());
                     nbTries++;
                 }
 

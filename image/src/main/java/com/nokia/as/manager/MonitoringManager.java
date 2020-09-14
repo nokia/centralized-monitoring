@@ -19,6 +19,7 @@ import com.nokia.as.manager.data.MetricRegistry;
 import com.nokia.as.util.FileUtil;
 import com.nokia.as.util.JSONUtil;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,7 @@ public class MonitoringManager {
     private final int DEFAULT_INTERVAL = 60;
     private String configFile;
     private String config;
-    private String connectionSettings;
+    private String publicConfig;
     @Expose
     @SerializedName("connectorGroups")
     private List<ConnectorList> connectorLists;
@@ -66,7 +67,7 @@ public class MonitoringManager {
         this.globalConnectorList = new ConnectorList();
         this.interval = DEFAULT_INTERVAL;
         this.config = "";
-        this.connectionSettings = FileUtil.readFile(connectionConfigFile);
+        this.publicConfig = "";
     }
 
     public void init() {
@@ -119,6 +120,8 @@ public class MonitoringManager {
         config = FileUtil.readFile(configFile);
         JSONObject jsonConfig = new JSONObject(config);
 
+        publicConfig = JSONUtil.cleanCredentialsJsonConfig(jsonConfig).toString();
+
         this.connectorLists = new ArrayList<>();
         this.globalConnectorList = new ConnectorList();
 
@@ -143,7 +146,6 @@ public class MonitoringManager {
                         connectorConfig.getInt("timeoutMs"),
                         connectorConfig.getInt("nbSteps"),
                         connectorConfig,
-                        new JSONObject(connectionSettings),
                         this);
             }
         }
@@ -158,7 +160,6 @@ public class MonitoringManager {
                               Integer timeoutMs,
                               Integer nbSteps,
                               JSONObject config,
-                              JSONObject connectionSettings,
                               MonitoringManager monitoringManager) {
         try {
             AbstractConnector connector = AbstractConnector.build(
@@ -170,7 +171,6 @@ public class MonitoringManager {
                     timeoutMs,
                     nbSteps,
                     config,
-                    connectionSettings,
                     monitoringManager);
 
             ConnectorList connectorList = this.getConnectorList(connectorType);
@@ -275,6 +275,6 @@ public class MonitoringManager {
     }
 
     public String getConfig() {
-        return config;
+        return publicConfig;
     }
 }

@@ -67,4 +67,25 @@ public class JSONUtil {
         return checkKeys(keys, jsonObj, null, true);
     }
 
+    public static JSONObject cleanCredentialsJsonConfig(JSONObject config) {
+        JSONObject cleanedJsonConfig = new JSONObject(config.toString());
+
+        JSONArray cleanedJsonConfigConnectorGroups = cleanedJsonConfig.getJSONArray("connectorGroups");
+
+        for (int i = 0; i < cleanedJsonConfigConnectorGroups.length(); i++) {
+            JSONArray connectors = cleanedJsonConfigConnectorGroups.getJSONObject(i)
+                    .getJSONArray("connectors");
+            for (int j = 0; j < connectors.length(); j++) {
+                JSONObject connector = connectors.getJSONObject(j);
+                if (connector.has("authentication")) {
+                    JSONObject authentication = connector.getJSONObject("authentication");
+                    authentication.put("login", "*****");
+                    authentication.put("token", "*****");
+                }
+            }
+        }
+
+        return cleanedJsonConfig;
+    }
+
 }

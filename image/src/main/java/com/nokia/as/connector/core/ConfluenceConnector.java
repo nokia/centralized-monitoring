@@ -23,9 +23,8 @@ public class ConfluenceConnector extends AbstractConnector {
                                Integer timeoutMs,
                                Integer nbSteps,
                                JSONObject config,
-                               JSONObject connectionSettings,
                                MonitoringManager monitoringManager) {
-        super(httpClient, id, serverAddress, ssl, timeoutMs, nbSteps, config, connectionSettings, monitoringManager);
+        super(httpClient, id, serverAddress, ssl, timeoutMs, nbSteps, config, monitoringManager);
     }
 
     public ConnectorType getType() {
