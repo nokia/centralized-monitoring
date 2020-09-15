@@ -190,12 +190,12 @@ public class JiraConnector extends AbstractConnector {
         for (User assignee : filter.getAssignees()) {
             if (assignee.getNbIssuesGaugeMetric() == null) {
                 GaugeMetric gaugeMetric = new GaugeMetric(
-                        "assignee_nb_issues_" + id + "_" + assignee.getCsl(),
+                        "assignee_nb_issues_" + id + "_" + filter.getKey() + "_" + assignee.getUsername(),
                         new ArrayList<>(Arrays.asList(
                                 new Label("component_type", "jira_nb_issues"),
                                 new Label("source", id),
                                 new Label("filter", filter.getKey()),
-                                new Label("assignee", assignee.getCsl())
+                                new Label("assignee", assignee.getUsername())
                         )));
 
                 monitoringManager.getMetricRegistry().register(gaugeMetric);
@@ -205,12 +205,12 @@ public class JiraConnector extends AbstractConnector {
             if (assignee.getNbTodayIssuesGaugeMetric() == null) {
 
                 GaugeMetric gaugeMetric = new GaugeMetric(
-                        "jira_nb_today_issues_" + id + "_" + assignee.getCsl(),
+                        "jira_nb_today_issues_" + id + "_" + filter.getKey() + "_" + assignee.getUsername(),
                         new ArrayList<>(Arrays.asList(
                                 new Label("component_type", "jira_nb_today_issues"),
                                 new Label("source", id),
                                 new Label("filter", filter.getKey()),
-                                new Label("assignee", assignee.getCsl())
+                                new Label("assignee", assignee.getUsername())
                         )));
 
                 monitoringManager.getMetricRegistry().register(gaugeMetric);
@@ -261,7 +261,7 @@ public class JiraConnector extends AbstractConnector {
                 String updatedString = fieldsJson.getString("updated");
                 String reporter = fieldsJson.getJSONObject("reporter").getString("key");
                 String assignee = fieldsJson.has("assignee") && !fieldsJson.isNull("assignee") ?
-                        fieldsJson.getJSONObject("assignee").getString("key") : "";
+                        fieldsJson.getJSONObject("assignee").getString("key") : "unassigned";
                 IssueStatus status = IssueStatus.fromId(
                         Integer.parseInt(fieldsJson.getJSONObject("status").getString("id")));
                 String issueType = fieldsJson.has("issuetype") ?

@@ -10,20 +10,20 @@ import com.nokia.as.manager.data.GaugeMetric;
 
 public class User {
 
-    private String csl;
+    private String username;
     private Integer nbIssues;
     private GaugeMetric nbIssuesGaugeMetric;
     private Integer nbTodayIssues;
     private GaugeMetric nbTodayIssuesGaugeMetric;
 
-    public User(String csl) {
-        this.csl = csl;
+    public User(String username) {
+        this.username = username;
         this.nbIssues = 0;
         this.nbTodayIssues = 0;
     }
 
-    public String getCsl() {
-        return csl;
+    public String getUsername() {
+        return username;
     }
 
     public Integer getNbIssues() {

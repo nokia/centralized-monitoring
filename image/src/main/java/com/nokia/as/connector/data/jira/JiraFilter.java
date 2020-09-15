@@ -102,9 +102,9 @@ public class JiraFilter {
         this.nbTodayIssues = 0;
     }
 
-    public User getAssignee(String csl) {
+    public User getAssignee(String username) {
         return assignees.stream()
-                .filter(user -> csl.equals(user.getCsl()))
+                .filter(user -> username.equals(user.getUsername()))
                 .findFirst()
                 .orElse(null);
     }
