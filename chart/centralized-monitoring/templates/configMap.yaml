@@ -1,0 +1,20 @@
+# Copyright 2020 Nokia
+# Licensed under the BSD 3-Clause Clear License.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+{{- if and (.Values.centralizedMonitoring.config.config.enabled) (.Values.centralizedMonitoring.config.connectionSettings.enabled) }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "centralizedMonitoring.name" . }}-configmap
+  labels: {{ include "centralizedMonitoring.labels" . | nindent 4 }}
+data:
+  {{- if .Values.centralizedMonitoring.config.config.enabled }}
+  config.json: |-
+{{ .Files.Get "files/config.json" | indent 4}}
+  {{- end}}
+  {{- if .Values.centralizedMonitoring.config.connectionSettings.enabled }}
+  connectionSettings.json: |-
+{{ .Files.Get "files/connectionSettings.json" | indent 4}}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,69 @@
+# Copyright 2020 Nokia
+# Licensed under the BSD 3-Clause Clear License.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "centralizedMonitoring.fullname" . }}
+  labels: {{ include "centralizedMonitoring.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels: {{ include "centralizedMonitoring.selectorLabels" . | nindent 6 }}
+  replicas: {{ .Values.centralizedMonitoring.replicaCount }}
+  template:
+    metadata:
+      labels: {{ include "centralizedMonitoring.labels" . | nindent 8 }}
+    spec:
+      {{- if .Values.centralizedMonitoring.securityContext.enabled }}
+      securityContext:
+        runAsUser: {{ .Values.centralizedMonitoring.securityContext.runAsUser }}
+        fsGroup: {{ .Values.centralizedMonitoring.securityContext.fsGroup }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.centralizedMonitoring.image.repository }}:{{ .Values.centralizedMonitoring.image.tag }}"
+          imagePullPolicy: {{ .Values.centralizedMonitoring.image.pullPolicy }}
+          env:
+            - name: no_proxy
+              value: "localhost, 127.0.0.1"
+          ports:
+            {{- range .Values.centralizedMonitoring.service }}
+            - name: {{ .name }}
+              containerPort: {{ .targetPort }}
+          {{- end }}
+          {{- if and (.Values.centralizedMonitoring.config.connectionSettings.enabled) (.Values.centralizedMonitoring.config.config.enabled) }}
+          volumeMounts:
+            - mountPath: "/opt/cmonitoring/daemon/resources/config"
+              name: cmonitoring-config
+          {{- end }}
+          {{- if .Values.centralizedMonitoring.liveness }}
+          livenessProbe:
+            initialDelaySeconds: 60
+            exec:
+              command:
+                - sh
+                - -c
+                - "reply=$(curl -s -o /dev/null -w %{http_code} http://localhost:8080/api/metrics);
+                if [ \"$reply\" -lt 200 -o \"$reply\" -ge 400 ];
+                then exit 1; fi;"
+          {{- end }}
+          {{- if .Values.centralizedMonitoring.readiness }}
+          readinessProbe:
+            initialDelaySeconds: 60
+            exec:
+              command:
+                - sh
+                - -c
+                - "reply=$(curl -s -o /dev/null -w %{http_code} http://localhost:8080/api/metrics);
+                if [ \"$reply\" -lt 200 -o \"$reply\" -ge 400 ];
+                then exit 1; fi;"
+          {{- end }}
+          resources:
+{{ toYaml .Values.centralizedMonitoring.resources | indent 12 }}
+      {{- if and (.Values.centralizedMonitoring.config.config.enabled) (.Values.centralizedMonitoring.config.connectionSettings.enabled) }}
+      volumes:
+        - name: cmonitoring-config
+          configMap:
+            name: {{ template  "centralizedMonitoring.name" . }}-configmap
+  {{- end }}
