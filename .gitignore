@@ -11,3 +11,5 @@ chart/cmonitoring/charts
 doc
 *.tgz
 *.DS_Store
+
+chart/centralized-monitoring/files/*
