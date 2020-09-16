@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1600111017477,
+  "iteration": 1600273793092,
   "links": [],
   "panels": [
     {
@@ -1477,6 +1477,7 @@
           ],
           "dateFormat": "YYYY-MM-DD HH:mm:ss",
           "decimals": 2,
+          "link": false,
           "mappingType": 1,
           "pattern": "__name__",
           "thresholds": [],
@@ -1531,7 +1532,7 @@
           "link": true,
           "linkTargetBlank": true,
           "linkTooltip": "",
-          "linkUrl": "",
+          "linkUrl": "https://jenkins.mono-project.com/job/${__cell:raw}",
           "mappingType": 1,
           "pattern": "a_name",
           "thresholds": [],
@@ -1727,7 +1728,7 @@
         "lineColor": "rgb(31, 120, 193)",
         "show": false
       },
-      "tableColumn": "jira_nb_issues_jira_abdera{assignee=\"all\", component_type=\"jira_nb_issues\", filter=\"Abdera\", instance=\"localhost:8080\", job=\"cmonitoring\", mutable=\"false\", source=\"jira\"}",
+      "tableColumn": "jira_nb_issues_jira_activecluster{assignee=\"all\", component_type=\"jira_nb_issues\", filter=\"ActiveCluster\", instance=\"localhost:8080\", job=\"cmonitoring\", mutable=\"false\", source=\"jira\"}",
       "targets": [
         {
           "expr": "{component_type=\"jira_nb_issues\", filter=\"$jira_filter\", assignee=\"$jira_user\"}",
@@ -1906,7 +1907,7 @@
         "lineColor": "rgb(31, 120, 193)",
         "show": false
       },
-      "tableColumn": "jira_nb_today_issues_jira_abdera{assignee=\"all\", component_type=\"jira_nb_today_issues\", filter=\"Abdera\", instance=\"localhost:8080\", job=\"cmonitoring\", mutable=\"false\", source=\"jira\"}",
+      "tableColumn": "jira_nb_today_issues_jira_activecluster{assignee=\"all\", component_type=\"jira_nb_today_issues\", filter=\"ActiveCluster\", instance=\"localhost:8080\", job=\"cmonitoring\", mutable=\"false\", source=\"jira\"}",
       "targets": [
         {
           "expr": "{component_type=\"jira_nb_today_issues\", filter=\"$jira_filter\", assignee=\"$jira_user\"}",
@@ -2278,8 +2279,8 @@
           "decimals": 2,
           "link": true,
           "linkTargetBlank": true,
-          "linkTooltip": "",
-          "linkUrl": "",
+          "linkTooltip": "Click to open Jira issue",
+          "linkUrl": "https://issues.apache.org/jira/browse/${__cell:raw}",
           "mappingType": 1,
           "pattern": "a_key",
           "thresholds": [],
@@ -2462,7 +2463,7 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "mono-project",
           "value": "mono-project"
         },
@@ -2488,9 +2489,9 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
-          "text": "Abdera",
-          "value": "Abdera"
+          "selected": false,
+          "text": "ActiveCluster",
+          "value": "ActiveCluster"
         },
         "datasource": "Prometheus",
         "definition": "label_values({component_type=\"issue\"}, filter)",
@@ -2514,7 +2515,7 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "all",
           "value": "all"
         },
@@ -2570,5 +2571,5 @@
   "timezone": "",
   "title": "Centralized Monitoring",
   "uid": "W9OG_fEWz",
-  "version": 7
+  "version": 3
 }
