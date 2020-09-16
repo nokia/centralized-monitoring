@@ -1,0 +1,23 @@
+# Copyright 2020 Nokia
+# Licensed under the BSD 3-Clause Clear License.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+{{- if .Values.centralizedMonitoring.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+  {{- include "centralizedMonitoring.labels" . | nindent 4 }}
+  name: {{ template "centralizedMonitoring.fullname" . }}
+spec:
+  accessModes:
+    {{- range .Values.centralizedMonitoring.persistence.accessModes }}
+    - {{ . | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.centralizedMonitoring.persistence.size | quote }}
+  {{- if .Values.centralizedMonitoring.persistence.storageClass.enabled }}
+  storageClassName: {{ .Values.centralizedMonitoring.persistence.storageClass.name }}
+  {{- end }}
+{{- end }}

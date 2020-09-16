@@ -2,7 +2,7 @@
 # Licensed under the BSD 3-Clause Clear License.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-{{- if and (.Values.centralizedMonitoring.config.config.enabled) (.Values.centralizedMonitoring.config.connectionSettings.enabled) }}
+{{- if or (.Values.centralizedMonitoring.config.config.enabled) (.Values.centralizedMonitoring.config.connectionSettings.enabled) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

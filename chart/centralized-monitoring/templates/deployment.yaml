@@ -20,6 +20,27 @@ spec:
         runAsUser: {{ .Values.centralizedMonitoring.securityContext.runAsUser }}
         fsGroup: {{ .Values.centralizedMonitoring.securityContext.fsGroup }}
       {{- end }}
+      {{- if or .Values.centralizedMonitoring.config.config .Values.centralizedMonitoring.config.connectionSettings }}
+      initContainers:
+        - name: init-config
+          image: "{{ .Values.centralizedMonitoring.image.repository }}:{{ .Values.centralizedMonitoring.image.tag }}"
+          imagePullPolicy: {{ .Values.centralizedMonitoring.image.pullPolicy }}
+          env:
+            - name: no_proxy
+              value: "localhost, 127.0.0.1"
+          command: ["/bin/bash", "-c"]
+          args: ["cp /tmp/config/config.json /opt/cmonitoring/daemon/resources/config/config.json &&
+          cp /tmp/config/connectionSettings.json /opt/cmonitoring/daemon/resources/config/connectionSettings.json &&
+          chmod 777  /opt/cmonitoring/daemon/resources/config/config.json &&
+          chmod 777 /opt/cmonitoring/daemon/resources/config/connectionSettings.json"]
+          volumeMounts:
+            - mountPath: "/tmp/config"
+              name: cmonitoring-config-init
+            - mountPath: "/opt/cmonitoring/daemon/resources/config"
+              name: cmonitoring-config
+          resources:
+{{ toYaml .Values.centralizedMonitoring.resources | indent 12 }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.centralizedMonitoring.image.repository }}:{{ .Values.centralizedMonitoring.image.tag }}"
@@ -32,7 +53,7 @@ spec:
             - name: {{ .name }}
               containerPort: {{ .targetPort }}
           {{- end }}
-          {{- if and (.Values.centralizedMonitoring.config.connectionSettings.enabled) (.Values.centralizedMonitoring.config.config.enabled) }}
+          {{- if .Values.centralizedMonitoring.persistence.enabled }}
           volumeMounts:
             - mountPath: "/opt/cmonitoring/daemon/resources/config"
               name: cmonitoring-config
@@ -61,9 +82,12 @@ spec:
           {{- end }}
           resources:
 {{ toYaml .Values.centralizedMonitoring.resources | indent 12 }}
-      {{- if and (.Values.centralizedMonitoring.config.config.enabled) (.Values.centralizedMonitoring.config.connectionSettings.enabled) }}
+      {{- if or (.Values.centralizedMonitoring.config.config.enabled) (.Values.centralizedMonitoring.config.connectionSettings.enabled) }}
       volumes:
-        - name: cmonitoring-config
+        - name: cmonitoring-config-init
           configMap:
             name: {{ template  "centralizedMonitoring.name" . }}-configmap
+        - name: cmonitoring-config
+          persistentVolumeClaim:
+            claimName: {{ template "centralizedMonitoring.fullname" . }}
   {{- end }}
