@@ -28,6 +28,7 @@ import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class JenkinsConnector extends AbstractConnector {
@@ -43,7 +44,8 @@ public class JenkinsConnector extends AbstractConnector {
             Map.entry("yellow", "unstable"),
             Map.entry("blue_anime", "inprogress"),
             Map.entry("red_anime", "inprogress"),
-            Map.entry("yellow_anime", "inprogress")
+            Map.entry("yellow_anime", "inprogress"),
+            Map.entry("aborted_anime", "inprogress")
     );
 
     public JenkinsConnector(HttpConnector httpClient,
@@ -76,10 +78,13 @@ public class JenkinsConnector extends AbstractConnector {
         List<JenkinsDirectory> directories = new ArrayList<>();
         for (int i = 0; i < directoriesJson.length(); i++) {
             JSONObject directoryJson = directoriesJson.getJSONObject(i);
+            boolean allActive = directoriesJson.getJSONObject(i).has("allActive") &&
+                    directoriesJson.getJSONObject(i).getBoolean("allActive");
             JenkinsDirectory directory = new JenkinsDirectory(
                     directoryJson.getString("key"),
                     directoryJson.getString("path"),
-                    directoryJson.getBoolean("detailed"));
+                    directoryJson.getBoolean("detailed"),
+                    allActive);
             directories.add(directory);
         }
         return directories;
@@ -163,12 +168,12 @@ public class JenkinsConnector extends AbstractConnector {
 
         try {
             // Get job list
-            String jobListSerice = URLEncoder.encode("/" + directoryPath + "/api/json?tree=jobs[name,color]");
+            String jobListService = URLEncoder.encode("/" + directoryPath + "/api/json?tree=jobs[name,color]");
             HttpResponse<String> jobsResponse = null;
             int nbTries = 0;
             while (jobsResponse == null && nbTries < directory.getRetryCount()) {
                 jobsResponse = httpClient.getAsync(
-                        new URI(protocol + "://" + serverAddress + jobListSerice),
+                        new URI(protocol + "://" + serverAddress + jobListService),
                         timeoutMs / 1000,
                         this.authentication.getLogin(),
                         this.authentication.getToken());
@@ -183,8 +188,21 @@ public class JenkinsConnector extends AbstractConnector {
 
             JSONArray jobsJsonArray = new JSONObject(jobsJson).getJSONArray("jobs");
 
-            for (int i = 0; i < jobsJsonArray.length(); i++) {
-                JSONObject jsonObject = jobsJsonArray.getJSONObject(i);
+            List<JSONObject> jobsJsonArrayActive = new ArrayList<>();
+
+            if (directory.isAllActive()) {
+                jobsJsonArrayActive = StreamSupport.stream(jobsJsonArray.spliterator(), false)
+                        .map(e -> (JSONObject) e)
+                        .filter(e -> e.has("color") && !"disabled".equals(e.getString("color")))
+                        .collect(Collectors.toList());
+            } else {
+                jobsJsonArrayActive = StreamSupport.stream(jobsJsonArray.spliterator(), false)
+                        .map(e -> (JSONObject) e)
+                        .collect(Collectors.toList());
+            }
+
+            for (int i = 0; i < jobsJsonArrayActive.size(); i++) {
+                JSONObject jsonObject = jobsJsonArrayActive.get(i);
 
                 if (!jsonObject.has("color")) {
                     continue;
@@ -237,17 +255,17 @@ public class JenkinsConnector extends AbstractConnector {
                 String lastBuildJson = lastBuildResponse.body();
 
                 JSONObject lastBuildObj = new JSONObject(lastBuildJson);
-                JSONArray actions = lastBuildObj.getJSONArray("actions");
 
-                Long lastDuration = Objects.requireNonNull(StreamSupport.stream(actions.spliterator(), false)
+                JSONArray actions = lastBuildObj.getJSONArray("actions");
+                JSONObject lastDurationObj = StreamSupport.stream(actions.spliterator(), false)
                         .map(e -> (JSONObject) e)
                         .filter(e -> e.has("_class") &&
                                 "jenkins.metrics.impl.TimeInQueueAction".equals(e.getString("_class")))
                         .findFirst()
-                        .orElse(null))
-                        .getLong("buildingDurationMillis");
+                        .orElse(null);
 
-                // Long lastSuccess = lastBuildObj.getLong("timestamp");
+                Long lastDuration = lastDurationObj == null ?
+                        null : lastDurationObj.getLong("buildingDurationMillis");
 
                 // Get last success and last failure
                 String jobBuildsService =
@@ -313,6 +331,8 @@ public class JenkinsConnector extends AbstractConnector {
 
 
         } catch (URISyntaxException | NotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

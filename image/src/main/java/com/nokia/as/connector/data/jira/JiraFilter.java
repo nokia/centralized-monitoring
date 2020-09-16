@@ -31,7 +31,7 @@ public class JiraFilter {
         this.nbIssues = 0;
         this.nbTodayIssues = 0;
         this.assignees = new ArrayList<>();
-        this.retryCount = 5;
+        this.retryCount = 3;
     }
 
     public String getKey() {

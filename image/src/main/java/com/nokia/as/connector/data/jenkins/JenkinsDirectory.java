@@ -11,14 +11,16 @@ public class JenkinsDirectory {
     private String key;
     private String path;
     private boolean detailed;
+    private boolean allActive;
     private JobList jobList;
     private Integer retryCount;
 
-    public JenkinsDirectory(String key, String path, boolean detailed) {
+    public JenkinsDirectory(String key, String path, boolean detailed, boolean allActive) {
         this.key = key;
         this.path = path;
         this.detailed = detailed;
-        this.retryCount = 5;
+        this.allActive = allActive;
+        this.retryCount = 3;
     }
 
     public String getKey() {
@@ -35,6 +37,10 @@ public class JenkinsDirectory {
 
     public boolean isDetailed() {
         return detailed;
+    }
+
+    public boolean isAllActive() {
+        return allActive;
     }
 
     public void setJobList(JobList jobList) {

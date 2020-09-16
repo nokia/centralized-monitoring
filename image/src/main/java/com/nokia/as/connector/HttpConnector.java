@@ -160,7 +160,6 @@ public class HttpConnector {
     }
 
     public HttpResponse<String> getAsync(URI uri, Integer timeout, String login, String pwd) {
-
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(uri)
@@ -246,7 +245,6 @@ public class HttpConnector {
             builder.append("=");
             builder.append(URLEncoder.encode(entry.getValue().toString(), StandardCharsets.UTF_8));
         }
-        System.out.println(builder.toString());
         return HttpRequest.BodyPublishers.ofString(builder.toString());
     }
 
