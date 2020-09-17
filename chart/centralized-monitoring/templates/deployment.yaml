@@ -30,9 +30,7 @@ spec:
               value: "localhost, 127.0.0.1"
           command: ["/bin/bash", "-c"]
           args: ["cp /tmp/config/config.json /opt/cmonitoring/daemon/resources/config/config.json &&
-          cp /tmp/config/connectionSettings.json /opt/cmonitoring/daemon/resources/config/connectionSettings.json &&
-          chmod 777  /opt/cmonitoring/daemon/resources/config/config.json &&
-          chmod 777 /opt/cmonitoring/daemon/resources/config/connectionSettings.json"]
+          cp /tmp/config/connectionSettings.json /opt/cmonitoring/daemon/resources/config/connectionSettings.json"]
           volumeMounts:
             - mountPath: "/tmp/config"
               name: cmonitoring-config-init
