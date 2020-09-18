@@ -27,7 +27,48 @@ Jira filter(s) / issue(s)
 
 ### Cloud
 
-[WIP]
+##### Preliminary information
+The Centralized Monitoring runtime is designed to be deployed in a cloud, kubernetes-based infrastructure, using the 
+helm package manager for an easier and faster configuration.
+
+Currently, the helm chart is available for kubernetes/helm3 configurations, but we plan to deploy it also on AWS, Azure 
+and GCP.
+
+##### Deployment
+
+First, clone this repository.
+
+*NB: centralized-monitoring image is not in a docker hub yet, so you will have to build it yourself, as follows:*
+
+```
+cd image
+make build
+```
+It is recommended to have the image on a hub, as it is easier to access for a kubernetes cluster.
+
+```
+docker tag cmonitoring:0.1.1 <your_hub>/cmonitoring:0.1.1
+docker push <your_hub>/cmonitoring:0.1.1 
+```
+
+Then go into the chart/centralized-monitoring directory, and edit the values.yaml file to match your needs. 
+[A guideline](https://github.com/nokia/centralized-monitoring/blob/master/chart/centralized-monitoring/README.md) is in 
+progress to help you define your configuration, specifying each entry of the values file.
+
+You may also want to add a configuration from the beginning. For this step, edit the config.json in the *files* 
+directory following the logic detailed in the **configuration** paragraph.  
+
+When your values.yaml and config.json are ready, simply deploy the chart using helm commands:
+
+```
+cd chart/centralized-monitoring
+helm install -f values.yaml <your_release_name> .
+```
+
+You will now have to expose the necessary services to access the monitoring from outside of the cluster. You can, in 
+this case, either port-forward the services or expose them using an ingress controller.
+
+Then jump to the **import Grafana dashboards** paragraph to finalize the monitoring.
 
 ### Deploy locally or in your own VM
 
