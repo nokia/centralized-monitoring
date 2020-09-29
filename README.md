@@ -1,4 +1,4 @@
-# Centralised Monitoring
+# Centralized Monitoring
 
 ## Description
 
@@ -38,7 +38,7 @@ and GCP.
 
 First, clone this repository.
 
-*NB: centralized-monitoring image is not in a docker hub yet, so you will have to build it yourself, as follows:*
+Centralized-monitoring image is not in a docker hub yet, so you will have to build it yourself, as follows:
 
 ```
 cd image
