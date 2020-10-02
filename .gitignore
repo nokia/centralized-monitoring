@@ -12,4 +12,4 @@ doc
 *.tgz
 *.DS_Store
 
-chart/centralized-monitoring/files/*
+chart/centralized-monitoring/files/config.json
