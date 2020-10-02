@@ -4,6 +4,16 @@ This is an helm chart for the centralized monitoring runtime, including
 the prometheus and grafana implementations needed to expose the collected 
 metrics. 
 
+### Prerequisites
+
+Before installing this helm chart, this few steps are important:
+- fetch prometheus-11.12.0 and grafana-5.5.6 helm charts into a **charts** directory at the chart root
+- properly configure your runtime and your metrics, following the next chapter
+
+### Runtime & metrics configuration
+
+*WiP*
+
 ### Values definition
 The purpose of this part is to define the important value definitions for 
 centralized-monitoring, prometheus and grafana in this release. The values 
@@ -18,8 +28,8 @@ and [here for grafana](https://github.com/helm/charts/tree/master/stable/grafana
 | Parameter        | Description           | Default  |
 | ------------- | ------------- | -----:|
 | replicaCount      | Number of centralized monitoring pods | 1 |
-| nameOverride | Expanded name of the chart, used for the kubernetes service and configMap names | <chart_name> |
-| fullNameOverride | Fully qualified app name for deployment and persistent volume claim | <release_name-chart_name> |
+| nameOverride | Expanded name of the chart, used for the kubernetes service and configMap names. This entry isn't mandatory, as it has a default-generated value. | <chart_name> |
+| fullNameOverride | Fully qualified app name for deployment and persistent volume claim. This entry isn't mandatory either, as it has a default-generated value. | <release_name-chart_name> |
 | image.repository | Docker image for the runtime, in the format <repo>/<image_name> | cmonitoring |
 | image.tag | Docker image tag | 0.1.1 |
 | image.pullPolicy | Pull policy for the docker image | IfNotPresent |

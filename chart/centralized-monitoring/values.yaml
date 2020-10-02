@@ -45,7 +45,7 @@ centralizedMonitoring:
     enabled: true
     storageClass:
       enabled: true
-      name: "hostpath"
+      name: hostpath
     size: 1Gi
     accessModes:
       - ReadWriteOnce
