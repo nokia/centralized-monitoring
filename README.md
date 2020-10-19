@@ -91,7 +91,8 @@ make run
 ### Configuration
 
 The multi-connector deamon won't do anything without a configuration. \
-It's possible to send a JSON configuration via a POST request to /api/set-config:
+It's possible to send a JSON configuration via a POST request to /api/set-config, or having a config.json in the *files*
+directory of the helm chart:
 
 ```
 {

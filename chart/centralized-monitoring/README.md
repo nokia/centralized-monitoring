@@ -12,6 +12,12 @@ Before installing this helm chart, this few steps are important:
 
 ### Runtime & metrics configuration
 
+##### Connection Settings
+
+*WiP*
+
+##### Metrics Configuration
+
 *WiP*
 
 ### Values definition
